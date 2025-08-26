@@ -66,3 +66,98 @@ if (document.readyState === 'loading') {
 
 // Also listen for history navigation (GitHub SPA navigation)
 window.addEventListener('popstate', () => setTimeout(applyWhenReady, 100));
+
+// Move contributions block below highlights and bring any right-side legend to the top of the graph
+function rearrangeContributions() {
+  if (!isTargetProfile()) return;
+
+  // Find contributions container (several possible selectors used by GitHub over time)
+  const contributions = document.querySelector('.js-yearly-contributions, #contributions, .js-contribution-graph, .ContributionCalendar');
+  if (!contributions) return;
+
+  // Find a suitable "highlights" area to place contributions after. Try common selectors and fall back to header area.
+  const highlightsSelectors = ['.js-profile-editable-area', '.profile-highlight', '.js-profile-header', '.vcard-names', '.gh-profile-highlights'];
+  let highlights = null;
+  for (const sel of highlightsSelectors) {
+    const el = document.querySelector(sel);
+    if (el) { highlights = el; break; }
+  }
+
+  // If we found highlights and contributions isn't already after it, move it.
+  if (highlights) {
+    // If contributions is a descendant of highlights, do nothing
+    if (!highlights.contains(contributions)) {
+      try {
+        highlights.parentNode.insertBefore(contributions, highlights.nextSibling);
+        contributions.classList.add('ghps-moved-below-highlights');
+      } catch (e) {
+        // ignore DOM exceptions
+      }
+    }
+  }
+
+  // Detect any child of the contributions container that is visually placed on the right side
+  // and move it to the top of the contributions container.
+  try {
+    const cRect = contributions.getBoundingClientRect();
+    const children = Array.from(contributions.children || []);
+    for (const child of children) {
+      const r = child.getBoundingClientRect();
+      // If a child is significantly to the right of the container, treat it as the legend/right-side element
+      if (r.left > cRect.left + cRect.width * 0.6) {
+        contributions.insertBefore(child, contributions.firstChild);
+        child.classList.add('ghps-years-top');
+        break;
+      }
+    }
+  } catch (e) {
+    // ignore layout calc errors
+  }
+}
+
+// Run rearrange logic after applying classes and on navigation
+setTimeout(rearrangeContributions, 250);
+window.addEventListener('popstate', () => setTimeout(rearrangeContributions, 300));
+
+// Intersection observer to reveal repo cards with animation
+function observeRepoCards() {
+  if (!isTargetProfile()) return;
+  const cards = document.querySelectorAll('.repo-card');
+  if (!cards || cards.length === 0) return;
+
+  const io = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('ghps-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  cards.forEach(c => {
+    if (!c.classList.contains('ghps-visible')) io.observe(c);
+  });
+}
+
+// Floating toggle injected into page to disable/enable the profile styling
+function injectToggle() {
+  if (!isTargetProfile()) return;
+  if (document.querySelector('.ghps-toggle')) return; // already injected
+
+  const btn = document.createElement('button');
+  btn.className = 'ghps-toggle';
+  btn.title = 'Toggle profile styling';
+  btn.innerText = 'Style';
+  btn.addEventListener('click', () => {
+    const root = document.documentElement;
+    root.classList.toggle('ghps-disabled');
+    btn.innerText = root.classList.contains('ghps-disabled') ? 'Enable' : 'Style';
+  });
+
+  document.body.appendChild(btn);
+}
+
+// Ensure observe/inject run after layout changes
+setTimeout(observeRepoCards, 400);
+setTimeout(injectToggle, 300);
+window.addEventListener('popstate', () => { setTimeout(observeRepoCards, 350); setTimeout(injectToggle, 350); });
