@@ -176,6 +176,60 @@ html.gh-profile-styler-applied .user-profile-banner {
 /* Disabled styling mode */
 html.gh-profile-styler-applied.ghps-disabled * { transition: none !important; filter: none !important; opacity: 0.95 !important; }
 
-/* Final safety: ensure text remains readable */
 .gh-profile-styler-applied * { color: inherit !important; }
+
+/* Disable animations, transforms and transitions for a clean, non-animated UI */
+html.gh-profile-styler-applied * {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Two-column layout with left sidebar */
+html.gh-profile-styler-applied.ghps-two-column .Layout,
+html.gh-profile-styler-applied.ghps-two-column .application-main,
+html.gh-profile-styler-applied.ghps-two-column .container-lg {
+  display: grid !important;
+  grid-template-columns: 260px 1fr !important; /* left sidebar fixed width, right content flexible */
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+.ghps-sidebar {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  padding: 18px !important;
+  border-radius: 14px !important;
+  height: fit-content !important;
+  position: sticky !important;
+  top: 28px !important;
+}
+
+.ghps-avatar-wrap { display:flex; justify-content:center; margin-bottom: 18px; }
+.ghps-avatar { width: 110px !important; height: 110px !important; border-radius: 50% !important; border: 3px solid rgba(255,255,255,0.04) !important; }
+
+.ghps-sidebar-nav { list-style:none !important; padding:0 !important; margin: 6px 0 0 0 !important; display:flex !important; flex-direction:column !important; gap: 8px !important; }
+.ghps-sidebar-nav li { margin:0 !important; }
+.ghps-sidebar-link { display:block !important; padding: 10px 12px !important; border-radius: 10px !important; color: var(--ghps-text) !important; text-decoration:none !important; font-weight:600 !important; background: transparent !important; }
+.ghps-sidebar-link:hover { background: rgba(88,166,255,0.045) !important; color: var(--ghps-accent) !important; }
+
+/* Right content surface adjustments so it looks like the sketch */
+html.gh-profile-styler-applied.ghps-two-column .Layout-main,
+html.gh-profile-styler-applied.ghps-two-column .application-main > *:not(.ghps-sidebar) {
+  background: linear-gradient(180deg, var(--ghps-surface), var(--ghps-surface-2)) !important;
+  padding: 20px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+/* Make sure small screens fall back to single column */
+@media (max-width: 840px) {
+  html.gh-profile-styler-applied.ghps-two-column .Layout,
+  html.gh-profile-styler-applied.ghps-two-column .application-main,
+  html.gh-profile-styler-applied.ghps-two-column .container-lg {
+    grid-template-columns: 1fr !important;
+  }
+  .ghps-sidebar { position: relative !important; top: auto !important; margin-bottom: 14px !important; }
+}
 

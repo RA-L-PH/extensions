@@ -172,3 +172,98 @@ function injectToggle() {
 setTimeout(observeRepoCards, 400);
 setTimeout(injectToggle, 300);
 window.addEventListener('popstate', () => { setTimeout(observeRepoCards, 350); setTimeout(injectToggle, 350); });
+
+// Inject a simple left sidebar (avatar + vertical nav) to create a two-column profile layout
+function injectLeftSidebar() {
+  if (!isTargetProfile()) return;
+  if (document.querySelector('.ghps-sidebar')) return; // already injected
+
+  // Find a logical layout container to receive the sidebar. GitHub typically uses a .Layout element
+  const layout = document.querySelector('.Layout') || document.querySelector('.application-main') || document.querySelector('.container-lg');
+  if (!layout) return;
+
+  // Create sidebar element
+  const sidebar = document.createElement('aside');
+  sidebar.className = 'ghps-sidebar';
+
+  // Try to clone existing avatar if present
+  const avatar = document.querySelector('img.avatar-user, .avatar .avatar-user img, .Avatar img');
+  if (avatar) {
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = 'ghps-avatar-wrap';
+    const avatarClone = avatar.cloneNode(true);
+    avatarClone.classList.add('ghps-avatar');
+    avatarWrap.appendChild(avatarClone);
+    sidebar.appendChild(avatarWrap);
+  }
+
+  // Get the existing top nav links (Overview / Repositories / Projects / Packages / Stars) if present
+  const topNav = document.querySelector('.UnderlineNav') || document.querySelector('.js-profile-editable-area .UnderlineNav');
+  const navList = document.createElement('ul');
+  navList.className = 'ghps-sidebar-nav';
+
+  const tabs = [
+    { label: 'Overview', href: `/${TARGET_USERNAME}` },
+    { label: 'Repositories', href: `/${TARGET_USERNAME}?tab=repositories` },
+    { label: 'Projects', href: `/${TARGET_USERNAME}?tab=projects` },
+    { label: 'Packages', href: `/${TARGET_USERNAME}?tab=packages` },
+    { label: 'Stars', href: `/${TARGET_USERNAME}?tab=stars` }
+  ];
+
+  // If there's an existing nav, prefer its links/URLs and selected state
+  if (topNav) {
+    const links = topNav.querySelectorAll('a');
+    if (links && links.length) {
+      links.forEach(a => {
+        const li = document.createElement('li');
+        const copy = a.cloneNode(true);
+        copy.classList.add('ghps-sidebar-link');
+        // Remove underline nav styling that may not fit
+        copy.classList.remove('selected');
+        li.appendChild(copy);
+        navList.appendChild(li);
+      });
+    }
+  }
+
+  // Fallback: build nav from the conservative tab list above
+  if (!navList.children.length) {
+    for (const t of tabs) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = t.href;
+      a.innerText = t.label;
+      a.className = 'ghps-sidebar-link';
+      li.appendChild(a);
+      navList.appendChild(li);
+    }
+  }
+
+  sidebar.appendChild(navList);
+
+  // Insert the sidebar as the first child of the layout container so CSS grid can arrange it
+  layout.insertBefore(sidebar, layout.firstChild);
+
+  // Add a helper class to the root to enable layout CSS
+  document.documentElement.classList.add('ghps-two-column');
+}
+
+// Robustly ensure the sidebar persists across GitHub's SPA navigation and DOM replacements
+function watchLayoutMutations() {
+  // Initial attempt
+  setTimeout(injectLeftSidebar, 300);
+
+  // Watch for DOM changes that may remove or replace the layout container
+  const observer = new MutationObserver((mutations) => {
+    // On any significant DOM update, try to ensure the sidebar exists
+    // (injection function guards against duplicate insertion)
+    injectLeftSidebar();
+  });
+
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+
+  // Keep the sidebar on history navigation too
+  window.addEventListener('popstate', () => setTimeout(injectLeftSidebar, 250));
+}
+
+watchLayoutMutations();
