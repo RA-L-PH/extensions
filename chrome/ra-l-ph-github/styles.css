@@ -1,0 +1,39 @@
+/* Custom styles for GitHub profile */
+.vcard-names {
+  font-family: 'Arial', sans-serif !important;
+  color: #0366d6 !important;
+}
+
+.user-profile-bio {
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+
+/* Style repository cards */
+.repo-card {
+  background-color: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.repo-card h3 {
+  color: #0366d6;
+  font-size: 1.5em;
+  margin-bottom: 8px;
+}
+
+.repo-card p {
+  color: #586069;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/* Add hover effect for repository cards */
+.repo-card:hover {
+  background-color: #eef6ff;
+  border-color: #0366d6;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
