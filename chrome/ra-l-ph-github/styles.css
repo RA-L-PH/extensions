@@ -1,235 +1,219 @@
-/* Complete modern dark redesign for RA-L-PH profile pages */
+/*
+ * Complete modern dark redesign for the RA-L-PH GitHub profile page.
+ * This file implements a dark theme and the two-column layout from the sketch.
+ */
 
-/* Fonts bundled with the extension */
-@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
-@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Italic.ttf') format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
-
-/* Root variables for the theme */
+/* Root variables that define the color scheme for the dark theme */
 html.gh-profile-styler-applied {
-  --ghps-bg: #06070a;
-  --ghps-surface: #0b0f14;
-  --ghps-surface-2: #0e1419;
-  --ghps-muted: #98a0a6;
-  --ghps-text: #eaf2ff;
+  --ghps-bg: #0d1117;
+  --ghps-surface: #161b22;
+  --ghps-surface-2: #21262d;
+  --ghps-border: #30363d;
+  --ghps-muted: #8b949e;
+  --ghps-text: #c9d1d9;
   --ghps-accent: #58a6ff;
-  --ghps-accent-2: #2b6ea3;
-  --ghps-glow: rgba(88,166,255,0.12);
+  --ghps-accent-2: #1f6feb;
+  --ghps-glow: rgba(88, 166, 255, 0.15);
   --ghps-radius: 12px;
   color-scheme: dark;
 }
 
-/* Base typography and background */
-html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
-  background: var(--ghps-bg) !important;
+/* Base typography and background settings */
+html.gh-profile-styler-applied,
+html.gh-profile-styler-applied body {
+  background-color: var(--ghps-bg) !important;
   color: var(--ghps-text) !important;
-  font-family: 'Josefin Sans Custom', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial !important;
-  -webkit-font-smoothing: antialiased !important;
-  -moz-osx-font-smoothing: grayscale !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Make primary containers dark */
-html.gh-profile-styler-applied .application-main,
-html.gh-profile-styler-applied .container-lg,
-html.gh-profile-styler-applied .Layout-main,
-html.gh-profile-styler-applied .js-profile-editable-area,
-html.gh-profile-styler-applied .BorderGrid,
-html.gh-profile-styler-applied .user-profile-banner {
-  background: linear-gradient(180deg, var(--ghps-surface), var(--ghps-surface-2)) !important;
+/*
+ * ===================================================================
+ * Two-Column Layout Implementation
+ * These rules create the main structure from your layout sketch.
+ * ===================================================================
+ */
+
+/* The main wrapper that creates the two-column grid */
+.ghps-custom-root {
+  display: grid !important;
+  /* Sidebar width is fixed, main content area is flexible */
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+  max-width: 1280px; /* Limit max width for better readability on large screens */
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* The left sidebar container */
+.ghps-sidebar {
+  background-color: var(--ghps-surface);
+  border: 1px solid var(--ghps-border);
+  padding: 24px;
+  border-radius: var(--ghps-radius);
+  /* Sticky position so it stays visible when scrolling the main content */
+  position: sticky;
+  top: 24px;
+}
+
+/* Wrapper for the circular avatar */
+.ghps-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ghps-border);
+}
+
+/* The cloned avatar image */
+.ghps-avatar {
+  width: 180px !important;
+  height: 180px !important;
+  border-radius: 50% !important;
+  border: 2px solid var(--ghps-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* The vertical navigation list */
+.ghps-sidebar-nav {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.ghps-sidebar-nav li {
+  margin: 0 !important;
+}
+
+/* Individual navigation links in the sidebar */
+.ghps-sidebar-link {
+  display: block !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
   color: var(--ghps-text) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+  transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+}
+
+.ghps-sidebar-link:hover {
+  background: rgba(139, 148, 158, 0.1) !important;
+  color: var(--ghps-accent) !important;
+}
+
+/* The right-hand container for the main GitHub content */
+.ghps-custom-right {
+  width: 100%;
+  min-width: 0; /* Prevents grid blowout */
+}
+
+/* Style the container that holds the original GitHub content */
+.ghps-custom-right > * {
+  background-color: var(--ghps-surface) !important;
+  border: 1px solid var(--ghps-border) !important;
   border-radius: var(--ghps-radius) !important;
+  padding: 24px;
 }
 
-/* Header / name area */
-.gh-profile-styler-applied .vcard-names, .gh-profile-styler-applied .ghps-header {
-  background: linear-gradient(90deg, rgba(88,166,255,0.06), rgba(255,255,255,0.01)) !important;
-  padding: 16px 20px !important;
-  border-radius: calc(var(--ghps-radius) - 4px) !important;
-  border: 1px solid rgba(255,255,255,0.03) !important;
+
+/*
+ * ===================================================================
+ * General Profile Styling
+ * These rules apply the dark theme to various elements.
+ * ===================================================================
+ */
+
+/* Hide original elements that we have moved into the sidebar */
+html.ghps-two-column .Layout-sidebar,
+html.ghps-two-column .UnderlineNav-body {
+  display: none !important;
 }
-.gh-profile-styler-applied .vcard-fullname, .gh-profile-styler-applied .p-name {
-  font-size: 1.6rem !important;
-  font-weight: 700 !important;
+
+/* Style the header/name area */
+.gh-profile-styler-applied .vcard-names-container {
+  border-bottom: 1px solid var(--ghps-border) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.gh-profile-styler-applied .vcard-fullname,
+.gh-profile-styler-applied .p-name {
+  font-size: 2rem !important;
+  font-weight: 600 !important;
   color: var(--ghps-text) !important;
 }
-.gh-profile-styler-applied .p-nickname { color: var(--ghps-muted) !important; }
-.gh-profile-styler-applied .user-profile-bio, .gh-profile-styler-applied .ghps-bio {
+
+.gh-profile-styler-applied .p-nickname {
+  color: var(--ghps-muted) !important;
+  font-size: 1.25rem !important;
+}
+
+.gh-profile-styler-applied .user-profile-bio {
   color: var(--ghps-muted) !important;
   font-size: 1rem !important;
 }
 
-/* Navigation tabs */
-.gh-profile-styler-applied .UnderlineNav {
-  background: transparent !important;
-  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
-}
-.gh-profile-styler-applied .UnderlineNav a {
-  color: var(--ghps-muted) !important;
-  transition: color 150ms ease, transform 150ms ease !important;
-}
-.gh-profile-styler-applied .UnderlineNav a.selected {
-  color: var(--ghps-text) !important;
-  font-weight: 700 !important;
-  transform: translateY(-2px) !important;
-}
-
-/* Pinned items (top of profile) */
-.gh-profile-styler-applied .pinned-items-list {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
-  gap: 14px !important;
-}
+/* Style pinned items and repository lists */
 .gh-profile-styler-applied .pinned-item-list-item,
-.gh-profile-styler-applied .pinned-item-list-item .pinned-item-content {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
-  border: 1px solid rgba(255,255,255,0.03) !important;
-  padding: 14px !important;
-  border-radius: 12px !important;
-  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease !important;
-}
-.gh-profile-styler-applied .pinned-item-list-item:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 12px 30px rgba(2,6,23,0.6) !important;
-}
-.gh-profile-styler-applied .pinned-item-list-item .repo { color: var(--ghps-text) !important; font-weight: 700 !important; }
-.gh-profile-styler-applied .pinned-item-list-item .repo-description { color: var(--ghps-muted) !important; }
-
-/* Repo list (Repositories tab) */
-.gh-profile-styler-applied .js-repo-list, .gh-profile-styler-applied .repo-list {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-  gap: 16px !important;
-}
-.gh-profile-styler-applied .repo-list-item,
-.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom {
-  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)) !important;
-  border: 1px solid rgba(255,255,255,0.03) !important;
-  padding: 14px !important;
-  border-radius: 12px !important;
-  transition: transform 220ms ease, box-shadow 220ms ease !important;
-}
-.gh-profile-styler-applied .repo-list-item:hover,
-.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom:hover {
-  transform: translateY(-6px) !important;
-  box-shadow: 0 12px 30px rgba(2,6,23,0.6) !important;
+.gh-profile-styler-applied .repo-list-item {
+  background-color: var(--ghps-surface-2) !important;
+  border: 1px solid var(--ghps-border) !important;
+  padding: 16px !important;
+  border-radius: 8px !important;
+  transition: transform 200ms ease, box-shadow 200ms ease;
 }
 
-/* Repository card content */
-.gh-profile-styler-applied .repo-list-item h3,
-.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom h3 { color: var(--ghps-text) !important; margin: 0 0 6px 0 !important; }
-.gh-profile-styler-applied .repo-list-item p,
-.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom p { color: var(--ghps-muted) !important; margin: 0 !important; }
-
-/* Repo metadata row */
-.gh-profile-styler-applied .repo-list-item .repo-meta,
-.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom .repo-meta {
-  display: flex !important; gap: 10px !important; align-items: center !important; color: var(--ghps-muted) !important;
+.gh-profile-styler-applied .pinned-item-list-item:hover,
+.gh-profile-styler-applied .repo-list-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-/* Contributions calendar (make it readable in dark) */
-.gh-profile-styler-applied .js-yearly-contributions, .gh-profile-styler-applied .ContributionCalendar {
-  background: transparent !important; padding: 12px !important; border-radius: 12px !important;
-}
-.gh-profile-styler-applied .ContributionCalendar-day { stroke: none !important; transition: transform 140ms ease, box-shadow 140ms ease !important; }
-.gh-profile-styler-applied .ContributionCalendar-day:hover { transform: translateY(-3px) !important; box-shadow: 0 6px 14px rgba(0,0,0,0.6) !important; }
-/* Dark color ramp for contributions */
-.gh-profile-styler-applied .ContributionCalendar-day[fill="#ebedf0"] { fill: rgba(255,255,255,0.03) !important; }
-.gh-profile-styler-applied .ContributionCalendar-day[fill="#9be9a8"] { fill: rgba(88,166,255,0.12) !important; }
-.gh-profile-styler-applied .ContributionCalendar-day[fill="#40c463"] { fill: rgba(88,166,255,0.18) !important; }
-.gh-profile-styler-applied .ContributionCalendar-day[fill="#30a14e"] { fill: rgba(88,166,255,0.24) !important; }
-.gh-profile-styler-applied .ContributionCalendar-day[fill="#216e39"] { fill: rgba(88,166,255,0.32) !important; }
-
-/* Followers / following lists */
-.gh-profile-styler-applied .follow-list-item, .gh-profile-styler-applied .d-table.table-fixed { background: none !important; }
-.gh-profile-styler-applied .follow-list-item .d-table-cell { color: var(--ghps-text) !important; }
-
-/* Buttons and links */
-.gh-profile-styler-applied .btn, .gh-profile-styler-applied .btn-primary,
-.gh-profile-styler-applied .EdgeButton, .gh-profile-styler-applied a.btn-link {
-  background: linear-gradient(180deg, var(--ghps-accent), var(--ghps-accent-2)) !important;
-  color: #071025 !important;
-  border-radius: 999px !important;
-  padding: 6px 10px !important;
-  box-shadow: 0 8px 20px var(--ghps-glow) !important;
-  transition: transform 160ms ease, box-shadow 160ms ease !important;
-}
-.gh-profile-styler-applied a:hover, .gh-profile-styler-applied .btn:hover { transform: translateY(-3px) !important; }
-
-/* Floating toggle */
-.gh-profile-styler-applied .ghps-toggle { position: fixed !important; right: 18px !important; bottom: 18px !important; z-index: 99999 !important; background: linear-gradient(180deg, var(--ghps-accent), #2a7bd7) !important; color: #071025 !important; padding: 10px 14px !important; border-radius: 999px !important; box-shadow: 0 8px 20px var(--ghps-glow) !important; border: none !important; cursor: pointer !important; font-weight: 700 !important; font-family: 'Josefin Sans Custom', sans-serif !important; transform-origin: center !important; transition: transform 160ms ease, box-shadow 160ms ease !important; }
-.gh-profile-styler-applied .ghps-toggle:active { transform: scale(0.96) !important; }
-
-/* Reveal animation for cards (used via .ghps-visible added from content script) */
-.gh-profile-styler-applied .ghps-visible { animation: ghps-fadeUp 420ms cubic-bezier(.2,.9,.2,1) forwards !important; }
-@keyframes ghps-fadeUp { to { opacity: 1; transform: translateY(0) !important; } }
-
-/* Small UI micro-interactions */
-.gh-profile-styler-applied a, .gh-profile-styler-applied a:link, .gh-profile-styler-applied a:visited { color: var(--ghps-accent) !important; }
-.gh-profile-styler-applied a:hover { text-decoration: underline !important; }
-.gh-profile-styler-applied input, .gh-profile-styler-applied textarea, .gh-profile-styler-applied select { background: #0a0d10 !important; color: var(--ghps-text) !important; border: 1px solid rgba(255,255,255,0.03) !important; }
-
-/* Accessibility: focus outlines */
-.gh-profile-styler-applied :focus { outline: 3px solid rgba(88,166,255,0.14) !important; outline-offset: 3px !important; }
-
-/* Disabled styling mode */
-html.gh-profile-styler-applied.ghps-disabled * { transition: none !important; filter: none !important; opacity: 0.95 !important; }
-
-.gh-profile-styler-applied * { color: inherit !important; }
-
-/* Disable animations, transforms and transitions for a clean, non-animated UI */
-html.gh-profile-styler-applied * {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
-  box-shadow: none !important;
+.gh-profile-styler-applied .repo,
+.gh-profile-styler-applied h3 a {
+  color: var(--ghps-accent) !important;
+  font-weight: 600 !important;
 }
 
-/* Two-column layout with left sidebar */
-html.gh-profile-styler-applied.ghps-two-column .Layout,
-html.gh-profile-styler-applied.ghps-two-column .application-main,
-html.gh-profile-styler-applied.ghps-two-column .container-lg {
-  display: grid !important;
-  grid-template-columns: 260px 1fr !important; /* left sidebar fixed width, right content flexible */
-  gap: 20px !important;
-  align-items: start !important;
+/* Contributions Calendar */
+.gh-profile-styler-applied .ContributionCalendar-day {
+  stroke: rgba(255, 255, 255, 0.05);
 }
+.gh-profile-styler-applied .ContributionCalendar-day[data-level="0"] { fill: #161b22 !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[data-level="1"] { fill: #0e4429 !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[data-level="2"] { fill: #006d32 !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[data-level="3"] { fill: #26a641 !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[data-level="4"] { fill: #39d353 !important; }
 
-.ghps-sidebar {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
-  border: 1px solid rgba(255,255,255,0.03) !important;
-  padding: 18px !important;
-  border-radius: 14px !important;
-  height: fit-content !important;
-  position: sticky !important;
-  top: 28px !important;
-}
 
-.ghps-avatar-wrap { display:flex; justify-content:center; margin-bottom: 18px; }
-.ghps-avatar { width: 110px !important; height: 110px !important; border-radius: 50% !important; border: 3px solid rgba(255,255,255,0.04) !important; }
+/*
+ * ===================================================================
+ * Responsive Design
+ * Ensures the layout adapts to smaller screens.
+ * ===================================================================
+ */
 
-.ghps-sidebar-nav { list-style:none !important; padding:0 !important; margin: 6px 0 0 0 !important; display:flex !important; flex-direction:column !important; gap: 8px !important; }
-.ghps-sidebar-nav li { margin:0 !important; }
-.ghps-sidebar-link { display:block !important; padding: 10px 12px !important; border-radius: 10px !important; color: var(--ghps-text) !important; text-decoration:none !important; font-weight:600 !important; background: transparent !important; }
-.ghps-sidebar-link:hover { background: rgba(88,166,255,0.045) !important; color: var(--ghps-accent) !important; }
-
-/* Right content surface adjustments so it looks like the sketch */
-html.gh-profile-styler-applied.ghps-two-column .Layout-main,
-html.gh-profile-styler-applied.ghps-two-column .application-main > *:not(.ghps-sidebar) {
-  background: linear-gradient(180deg, var(--ghps-surface), var(--ghps-surface-2)) !important;
-  padding: 20px !important;
-  border-radius: 14px !important;
-  border: 1px solid rgba(255,255,255,0.03) !important;
-}
-
-/* Make sure small screens fall back to single column */
-@media (max-width: 840px) {
-  html.gh-profile-styler-applied.ghps-two-column .Layout,
-  html.gh-profile-styler-applied.ghps-two-column .application-main,
-  html.gh-profile-styler-applied.ghps-two-column .container-lg {
+@media (max-width: 960px) {
+  /* Switch to a single-column layout on tablets and mobile */
+  .ghps-custom-root {
     grid-template-columns: 1fr !important;
   }
-  .ghps-sidebar { position: relative !important; top: auto !important; margin-bottom: 14px !important; }
+  /* The sidebar is no longer sticky and appears above the main content */
+  .ghps-sidebar {
+    position: relative !important;
+    top: auto !important;
+    margin-bottom: 24px !important;
+  }
+  .ghps-avatar {
+      width: 120px !important;
+      height: 120px !important;
+  }
 }
-
