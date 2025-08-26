@@ -22,15 +22,21 @@ html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
 
 /* Root variables that define the color scheme for the dark theme */
 html.gh-profile-styler-applied {
-  --ghps-bg: #0d1117;
-  --ghps-surface: #161b22;
-  --ghps-surface-2: #21262d;
-  --ghps-border: #30363d;
-  --ghps-muted: #8b949e;
-  --ghps-text: #c9d1d9;
-  --ghps-accent: #ffae58;
-  --ghps-accent-2: #eb931f;
-  --ghps-glow: rgba(88, 166, 255, 0.15);
+  /* Pitch-black primary background */
+  --ghps-bg: #000000;
+  /* Surfaces use near-black separation while staying fully dark */
+  --ghps-surface: #0b0b0b;
+  --ghps-surface-2: #121212;
+  --ghps-border: #161616;
+  /* Muted / secondary text in warm gray to pair with orange accents */
+  --ghps-muted: #bfbfbf;
+  /* Primary text: light gray/white for contrast on black */
+  --ghps-text: #e6e6e6;
+  /* Orange accent palette (vibrant primary + slightly lighter secondary) */
+  --ghps-accent: #ff7a00;
+  --ghps-accent-2: #ff9800;
+  /* Warm orange glow used for subtle highlights */
+  --ghps-glow: rgba(255, 152, 0, 0.12);
   --ghps-radius: 12px;
   color-scheme: dark;
 }
@@ -237,7 +243,8 @@ html.gh-profile-styler-applied .application-main > :first-child {
 .ghps-nav-card .ghps-sidebar-link.active,
 .ghps-nav-card .ghps-sidebar-link[aria-selected="true"] {
   color: var(--ghps-accent-2) !important;
-  background: linear-gradient(90deg, rgba(88,166,255,0.04), rgba(88,166,255,0.02)) !important;
+  /* Subtle warm orange highlight for the active item */
+  background: linear-gradient(90deg, rgba(255,152,0,0.06), rgba(255,152,0,0.03)) !important;
   font-weight: 700 !important;
   position: relative !important;
   box-shadow: none !important;
@@ -316,7 +323,8 @@ html.gh-profile-styler-applied .application-main > :first-child {
 }
 
 .ghps-sidebar-link:hover {
-  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
+  /* Slight warm hover glow and accent color */
+  background: linear-gradient(90deg, rgba(255,152,0,0.04), rgba(255,152,0,0.02)) !important;
   color: var(--ghps-accent) !important;
   transform: translateX(4px) !important;
 }
@@ -403,4 +411,295 @@ html.gh-profile-styler-applied .application-main > .container-xl > .Layout-main:
   .ghps-user-info div.mb-3 {
     justify-content: center;
   }
+}
+
+/* ------------------------------------------------------------------
+   In-content links: ensure repo names and other anchors follow the
+   pitch-black + orange accent aesthetic (replace GitHub's default blue)
+   ------------------------------------------------------------------ */
+.ghps-custom-right a,
+.ghps-custom-right a:link,
+.ghps-custom-right a:visited {
+  /* keep in-content links neutral by default; contribution-specific links are targeted below */
+  color: var(--ghps-text) !important;
+  text-decoration: none !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  transition: color 140ms ease, border-color 140ms ease, transform 120ms ease !important;
+}
+.ghps-custom-right a:hover,
+.ghps-custom-right a:active {
+  color: var(--ghps-accent) !important; /* subtle lift on hover but not full orange unless in contribution activity */
+}
+
+/* Repo lists and similar item titles should be prominent and orange */
+.ghps-custom-right .repo-list a,
+.ghps-custom-right .repo-list-item a,
+.ghps-custom-right .list-style-none a,
+.ghps-custom-right h3 a,
+.ghps-custom-right .f4 a {
+  color: var(--ghps-text) !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+/* Keep small counters muted so they remain legible on black */
+.ghps-custom-right .Counter,
+.ghps-custom-right .counter,
+.ghps-custom-right .num {
+  color: var(--ghps-muted) !important;
+  background-color: transparent !important;
+  border-color: rgba(255,255,255,0.02) !important;
+}
+
+/* ------------------------------------------------------------------
+   Contribution graph (yearly heatmap) — map GitHub's data-level to
+   warm orange shades and ensure legend/selector match the theme.
+   We target common class names and SVG rect[data-level] used by GitHub.
+   ------------------------------------------------------------------ */
+.ghps-custom-right .js-yearly-contributions svg rect[data-level],
+.ghps-custom-right svg rect.ContributionCalendar-day,
+.ghps-custom-right .js-contribution-graph rect[data-level] {
+  /* default base for empty days */
+  fill: #0d0d0d !important;
+  stroke: rgba(255,152,0,0) !important;
+}
+
+/* Levels: 1 (light) -> 4 (strong) mapped to orange shades */
+.ghps-custom-right svg rect[data-level="1"] {
+  fill: rgba(255,152,0,0.12) !important;
+}
+.ghps-custom-right svg rect[data-level="2"] {
+  fill: rgba(255,152,0,0.28) !important;
+}
+.ghps-custom-right svg rect[data-level="3"] {
+  fill: rgba(255,152,0,0.48) !important;
+}
+.ghps-custom-right svg rect[data-level="4"] {
+  fill: rgba(255,152,0,0.84) !important;
+}
+
+/* Hover/active emphasis on day squares */
+.ghps-custom-right svg rect[data-level]:hover {
+  outline: 2px solid rgba(255,152,0,0.18) !important;
+  transition: outline-color 140ms ease, transform 120ms ease !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Legend text and small key items use muted warm gray */
+.ghps-custom-right .Legend-text,
+.ghps-custom-right .contrib-legend text,
+.ghps-custom-right .js-yearly-contributions .ContributionCalendar-label {
+  fill: var(--ghps-muted) !important;
+  color: var(--ghps-muted) !important;
+}
+
+/* Year selector / small select menu on the right (match active to orange) */
+.ghps-custom-right .SelectMenu,
+.ghps-custom-right .SelectMenu-item,
+.ghps-custom-right .select-menu-item,
+.ghps-custom-right .js-contribution-activity .SelectMenu-item {
+  background: transparent !important;
+  color: var(--ghps-text) !important;
+}
+.ghps-custom-right .SelectMenu-item[aria-checked="true"],
+.ghps-custom-right .SelectMenu-item[aria-current="true"],
+.ghps-custom-right .SelectMenu-item.selected,
+.ghps-custom-right .select-menu-item.selected,
+.ghps-custom-right .SelectMenu-item[aria-selected="true"] {
+  background: linear-gradient(180deg, var(--ghps-accent), var(--ghps-accent-2)) !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 10px rgba(255,152,0,0.10) !important;
+}
+
+/* When the year toggle uses a small pill (summary/button), ensure accent applies */
+.ghps-custom-right summary[aria-haspopup] > .btn,
+.ghps-custom-right .SelectMenu-button,
+.ghps-custom-right .btn-select,
+.ghps-custom-right .year-select-button {
+  background: transparent !important;
+  color: var(--ghps-text) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+.ghps-custom-right summary[aria-haspopup][open] > .btn,
+.ghps-custom-right .SelectMenu-button:active,
+.ghps-custom-right .SelectMenu-button[aria-pressed="true"] {
+  background: var(--ghps-accent) !important;
+  color: #000 !important;
+}
+
+/* ------------------------------------------------------------------
+   Broader element coverage: primary links, buttons, numeric highlights,
+   and small badges inside the applied profile scope to ensure visual
+   consistency with the orange-on-black aesthetic.
+
+   Assumptions: We target common GitHub class names used for primary
+   links (`Link--primary`), strong/bold numeric values (`.text-bold`),
+   and button styles (`.btn`, `.BtnGroup`, `.btn-primary`) within the
+   `html.gh-profile-styler-applied` scope so we don't override other sites.
+   ------------------------------------------------------------------ */
+html.gh-profile-styler-applied a,
+html.gh-profile-styler-applied a:link,
+html.gh-profile-styler-applied a:visited {
+  /* avoid globally turning links orange; keep default text color */
+  color: var(--ghps-text) !important;
+  text-decoration: none !important;
+}
+
+/* More prominent primary link style used across GitHub */
+html.gh-profile-styler-applied a.Link--primary,
+html.gh-profile-styler-applied .Link--primary {
+  color: var(--ghps-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Muted links should remain legible but warmer */
+html.gh-profile-styler-applied a.Link--muted,
+html.gh-profile-styler-applied .Link--muted,
+html.gh-profile-styler-applied .muted,
+html.gh-profile-styler-applied .text-small {
+  color: var(--ghps-muted) !important;
+}
+
+/* Buttons: primary actions should use orange; secondary remain dark */
+html.gh-profile-styler-applied .btn,
+html.gh-profile-styler-applied .btn-primary,
+html.gh-profile-styler-applied .BtnGroup .btn {
+  background: transparent !important;
+  color: var(--ghps-text) !important;
+  border: 1px solid rgba(255,255,255,0.04) !important;
+}
+html.gh-profile-styler-applied .btn-primary,
+html.gh-profile-styler-applied .btn-primary:active,
+html.gh-profile-styler-applied .btn-primary:hover {
+  background: linear-gradient(180deg, var(--ghps-accent), var(--ghps-accent-2)) !important;
+  color: #000 !important;
+  box-shadow: 0 6px 18px rgba(255,152,0,0.12) !important;
+}
+
+/* Emphasize numeric highlights (commit counts, contribution numbers) */
+html.gh-profile-styler-applied .text-bold,
+html.gh-profile-styler-applied strong,
+html.gh-profile-styler-applied .num,
+html.gh-profile-styler-applied .count,
+html.gh-profile-styler-applied .contrib-count {
+  color: var(--ghps-text) !important;
+  font-weight: 700 !important;
+}
+
+/* Small badges/pills (repo language chips, counters) — darker backgrounds with orange text */
+html.gh-profile-styler-applied .Badge,
+html.gh-profile-styler-applied .Label,
+html.gh-profile-styler-applied .language-color,
+html.gh-profile-styler-applied .topic-tag {
+  background: rgba(255,255,255,0.02) !important;
+  color: var(--ghps-text) !important;
+  border: 1px solid rgba(255,255,255,0.02) !important;
+}
+html.gh-profile-styler-applied .Badge--important,
+html.gh-profile-styler-applied .Label--important,
+html.gh-profile-styler-applied .topic-tag.primary {
+  background: var(--ghps-surface-2) !important;
+  color: var(--ghps-text) !important;
+}
+
+/* Target only contribution-activity links to be orange */
+.ghps-custom-right .js-contribution-activity a,
+.ghps-custom-right .contribution-activity a,
+.ghps-custom-right .contrib-activity a,
+.ghps-custom-right .ContributionActivity a {
+  color: rgba(255,152,0,0.72) !important;
+  text-decoration: none !important;
+  border-bottom: 1px dashed rgba(255,152,0,0.14) !important;
+  padding-bottom: 1px !important;
+  transition: color 140ms ease, border-color 140ms ease, transform 120ms ease !important;
+}
+.ghps-custom-right .js-contribution-activity a:hover,
+.ghps-custom-right .contribution-activity a:hover,
+.ghps-custom-right .contrib-activity a:hover,
+.ghps-custom-right .ContributionActivity a:hover {
+  color: var(--ghps-accent-2) !important;
+  border-bottom-color: rgba(255,152,0,0.48) !important;
+  transform: translateX(2px) !important;
+}
+
+/* Ensure dropdowns, small menus and the contribution settings link follow the theme */
+html.gh-profile-styler-applied .dropdown-menu,
+html.gh-profile-styler-applied .SelectMenu,
+html.gh-profile-styler-applied .Details-content {
+  background: var(--ghps-surface) !important;
+  color: var(--ghps-text) !important;
+  border: 1px solid var(--ghps-border) !important;
+}
+
+/* ------------------------------------------------------------------
+   Force contribution legend squares and small progress bars (horizontal
+   indicators) to use orange shades instead of green. Targets both SVG
+   rect legend items and common progress/Bar HTML patterns used by GitHub.
+   ------------------------------------------------------------------ */
+.ghps-custom-right .ContributionCalendar-legend rect,
+.ghps-custom-right .contrib-legend rect,
+.ghps-custom-right .contrib-legend .legend-key,
+.ghps-custom-right .contrib-legend .legend-item,
+.ghps-custom-right .contrib-legend .color,
+.ghps-custom-right .contrib-legend .key,
+.ghps-custom-right .ContributionCalendar-legend .key {
+  fill: none !important;
+  stroke: none !important;
+  background: transparent !important;
+}
+
+/* Replace SVG rect legend fills (map green levels to orange) */
+.ghps-custom-right .ContributionCalendar-legend rect[data-level="1"],
+.ghps-custom-right .contrib-legend rect[data-level="1"] {
+  fill: rgba(255,152,0,0.12) !important;
+}
+.ghps-custom-right .ContributionCalendar-legend rect[data-level="2"],
+.ghps-custom-right .contrib-legend rect[data-level="2"] {
+  fill: rgba(255,152,0,0.28) !important;
+}
+.ghps-custom-right .ContributionCalendar-legend rect[data-level="3"],
+.ghps-custom-right .contrib-legend rect[data-level="3"] {
+  fill: rgba(255,152,0,0.48) !important;
+}
+.ghps-custom-right .ContributionCalendar-legend rect[data-level="4"],
+.ghps-custom-right .contrib-legend rect[data-level="4"] {
+  fill: rgba(255,152,0,0.84) !important;
+}
+
+/* Horizontal progress bars used in contribution breakdowns or repo stats */
+.ghps-custom-right .progress,
+.ghps-custom-right .Progress,
+.ghps-custom-right .progress-bar,
+.ghps-custom-right .bar,
+.ghps-custom-right .bar-fill,
+.ghps-custom-right .progress-inner,
+.ghps-custom-right .progress-track,
+.ghps-custom-right .graph-bar {
+  background-color: rgba(255,255,255,0.03) !important; /* track */
+}
+
+.ghps-custom-right .progress .progress-bar-fill,
+.ghps-custom-right .Progress .progress-bar-fill,
+.ghps-custom-right .progress-bar .fill,
+.ghps-custom-right .bar .fill,
+.ghps-custom-right .bar-fill,
+.ghps-custom-right .graph-bar .fill {
+  background: linear-gradient(90deg, rgba(255,152,0,0.92), var(--ghps-accent-2)) !important;
+  border-radius: 999px !important;
+}
+
+/* Some bars use inline SVG rectangles; recolor them too */
+.ghps-custom-right svg rect.progress-fill,
+.ghps-custom-right svg rect.bar-fill {
+  fill: var(--ghps-accent-2) !important;
+}
+
+/* Ensure small rounded legend/key dots also show orange */
+.ghps-custom-right .legend-key .dot,
+.ghps-custom-right .legend-item .dot,
+.ghps-custom-right .contrib-legend .dot {
+  background: var(--ghps-accent) !important;
+  border-color: rgba(255,152,0,0.18) !important;
 }

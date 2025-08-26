@@ -1,0 +1,48 @@
+/* force.css
+   Change --force-font to the font(s) you want to apply.
+   To use a bundled font file, add a fonts/ folder in this extension and
+   uncomment and adjust the @font-face rule below.
+*/
+
+:root {
+  /* default font stack, replace with your preferred font family */
+  --force-font: 'ProtestRevolution', "Segoe UI", Arial, sans-serif;
+}
+
+/* apply to everything and use !important to override page styles */
+:root, html, body, * , *::before, *::after {
+  font-family: var(--force-font) !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Example to bundle and use a local font file (uncomment and place file in fonts/):
+/* force.css
+   Change --force-font to the font(s) you want to apply.
+   To use a bundled font file, add a fonts/ folder in this extension and
+   ensure the file is exposed via manifest.json's web_accessible_resources.
+*/
+
+:root {
+  /* default font stack, replace with your preferred font family */
+  --force-font: 'ProtestRevolution', "Segoe UI", Arial, sans-serif;
+}
+
+/* apply to everything and use !important to override page styles */
+:root, html, body, * , *::before, *::after {
+  font-family: var(--force-font) !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Register bundled font so pages can use it */
+@font-face {
+  font-family: 'ProtestRevolution';
+  /* web_accessible_resources must expose the font file in manifest.json */
+  src: url('fonts/ProtestRevolution-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
