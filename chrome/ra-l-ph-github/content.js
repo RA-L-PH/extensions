@@ -17,7 +17,10 @@ function applyWhenReady() {
   if (!isTargetProfile()) return;
 
   // Mark document so CSS selectors can target it
-  document.documentElement.classList.add(NAMESPACE_CLASS);
+  const root = document.documentElement;
+  root.classList.add(NAMESPACE_CLASS);
+  // restore toggle state
+  if (localStorage.getItem('ghps-disabled') === '1') root.classList.add('ghps-disabled');
 
   // Fallback selectors cover variations in GitHub markup/themes
   const headerSelectors = ['.vcard-names', '.p-name', 'h1.vcard-names', '.vcard-fullname', 'h1[itemprop="name"]'];
@@ -40,6 +43,11 @@ function applyWhenReady() {
       // Add classes so CSS file can style them without inline styles
       if (header) header.classList.add('ghps-header');
       if (bio) bio.classList.add('ghps-bio');
+  // Add classes to pinned items and repo list items when present
+  const pinned = document.querySelectorAll('.pinned-item-list-item, .pinned-item');
+  pinned.forEach(p => p.classList.add('ghps-pinned'));
+  const repoItems = document.querySelectorAll('.repo-list-item, .col-12.d-block.width-full.py-4.border-bottom');
+  repoItems.forEach(r => r.classList.add('ghps-repo-item'));
       return true;
     }
     return false;
@@ -122,7 +130,7 @@ window.addEventListener('popstate', () => setTimeout(rearrangeContributions, 300
 // Intersection observer to reveal repo cards with animation
 function observeRepoCards() {
   if (!isTargetProfile()) return;
-  const cards = document.querySelectorAll('.repo-card');
+  const cards = document.querySelectorAll('.repo-card, .repo-list-item, .pinned-item-list-item, .col-12.d-block.width-full.py-4.border-bottom');
   if (!cards || cards.length === 0) return;
 
   const io = new IntersectionObserver((entries, observer) => {
@@ -147,11 +155,14 @@ function injectToggle() {
   const btn = document.createElement('button');
   btn.className = 'ghps-toggle';
   btn.title = 'Toggle profile styling';
-  btn.innerText = 'Style';
+  // reflect persisted state
+  const root = document.documentElement;
+  btn.innerText = root.classList.contains('ghps-disabled') ? 'Enable' : 'Style';
   btn.addEventListener('click', () => {
-    const root = document.documentElement;
     root.classList.toggle('ghps-disabled');
-    btn.innerText = root.classList.contains('ghps-disabled') ? 'Enable' : 'Style';
+    const disabled = root.classList.contains('ghps-disabled');
+    btn.innerText = disabled ? 'Enable' : 'Style';
+    localStorage.setItem('ghps-disabled', disabled ? '1' : '0');
   });
 
   document.body.appendChild(btn);

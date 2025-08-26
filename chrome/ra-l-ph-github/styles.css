@@ -1,215 +1,181 @@
-/* Custom styles for GitHub profile */
-/* Namespace so we only change pages where the script applied the class */
-.gh-profile-styler-applied .vcard-names,
-.gh-profile-styler-applied .ghps-header {
-  font-family: 'Arial', sans-serif !important;
-  color: #0366d6 !important;
-  background: linear-gradient(90deg, #f8fafc 0%, #e9f2ff 100%) !important;
-  border: 2px solid #0366d6 !important;
-  padding: 10px !important;
-  border-radius: 8px !important;
-  text-align: center !important;
-}
+/* Complete modern dark redesign for RA-L-PH profile pages */
 
-.gh-profile-styler-applied .user-profile-bio,
-.gh-profile-styler-applied .ghps-bio {
-  font-size: 1.15em !important;
-  line-height: 1.5 !important;
-  color: #555 !important;
-  font-style: italic !important;
-}
+/* Fonts bundled with the extension */
+@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Josefin Sans Custom'; src: url('fonts/JosefinSans-Italic.ttf') format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
 
-/* Optional: style repositories list cards if present */
-.gh-profile-styler-applied .repo-card {
-  background-color: #ffffff !important;
-  border: 1px solid #e1e4e8 !important;
-  border-radius: 8px !important;
-  padding: 12px !important;
-  margin-bottom: 12px !important;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04) !important;
-}
-
-.gh-profile-styler-applied .repo-card h3 {
-  color: #0366d6 !important;
-  font-size: 1.1em !important;
-  margin-bottom: 6px !important;
-}
-
-.gh-profile-styler-applied .repo-card:hover {
-  background-color: #f1f8ff !important;
-  border-color: #0366d6 !important;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* When contributions were moved below highlights */
-.gh-profile-styler-applied .ghps-moved-below-highlights {
-  margin-top: 18px !important;
-  padding-top: 12px !important;
-  border-top: 1px solid #e1e4e8 !important;
-}
-
-/* When a right-side legend (years) is moved to the top */
-.gh-profile-styler-applied .ghps-years-top {
-  display: block !important;
-  margin-bottom: 8px !important;
-  font-size: 0.95em !important;
-  color: #586069 !important;
-}
-
-/* Ensure the contribution graph area flows naturally under the legend */
-.gh-profile-styler-applied .js-yearly-contributions, .gh-profile-styler-applied .ContributionCalendar {
-  clear: both !important;
-}
-
-/* Load local fonts bundled with the extension */
-@font-face {
-  font-family: 'Josefin Sans Custom';
-  src: url('fonts/JosefinSans-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Josefin Sans Custom';
-  src: url('fonts/JosefinSans-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Josefin Sans Custom';
-  src: url('fonts/JosefinSans-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Global dark theme enforced when applied */
-html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
-  --ghps-bg: #0b0f14;
-  --ghps-surface: #0f1418;
-  --ghps-muted: #9aa4ae;
-  --ghps-text: #e6eef6;
+/* Root variables for the theme */
+html.gh-profile-styler-applied {
+  --ghps-bg: #06070a;
+  --ghps-surface: #0b0f14;
+  --ghps-surface-2: #0e1419;
+  --ghps-muted: #98a0a6;
+  --ghps-text: #eaf2ff;
   --ghps-accent: #58a6ff;
+  --ghps-accent-2: #2b6ea3;
   --ghps-glow: rgba(88,166,255,0.12);
+  --ghps-radius: 12px;
   color-scheme: dark;
-  background-color: var(--ghps-bg) !important;
-  color: var(--ghps-text) !important;
-  font-family: 'Josefin Sans Custom', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
-/* Target main content areas to force dark surfaces */
+/* Base typography and background */
+html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
+  background: var(--ghps-bg) !important;
+  color: var(--ghps-text) !important;
+  font-family: 'Josefin Sans Custom', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Make primary containers dark */
 html.gh-profile-styler-applied .application-main,
 html.gh-profile-styler-applied .container-lg,
+html.gh-profile-styler-applied .Layout-main,
 html.gh-profile-styler-applied .js-profile-editable-area,
-html.gh-profile-styler-applied .border-top,
+html.gh-profile-styler-applied .BorderGrid,
 html.gh-profile-styler-applied .user-profile-banner {
-  background-color: var(--ghps-surface) !important;
+  background: linear-gradient(180deg, var(--ghps-surface), var(--ghps-surface-2)) !important;
   color: var(--ghps-text) !important;
+  border-radius: var(--ghps-radius) !important;
 }
 
-/* Repo card: modern grid layout with micro interactions */
-.gh-profile-styler-applied .repo-card {
+/* Header / name area */
+.gh-profile-styler-applied .vcard-names, .gh-profile-styler-applied .ghps-header {
+  background: linear-gradient(90deg, rgba(88,166,255,0.06), rgba(255,255,255,0.01)) !important;
+  padding: 16px 20px !important;
+  border-radius: calc(var(--ghps-radius) - 4px) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+.gh-profile-styler-applied .vcard-fullname, .gh-profile-styler-applied .p-name {
+  font-size: 1.6rem !important;
+  font-weight: 700 !important;
+  color: var(--ghps-text) !important;
+}
+.gh-profile-styler-applied .p-nickname { color: var(--ghps-muted) !important; }
+.gh-profile-styler-applied .user-profile-bio, .gh-profile-styler-applied .ghps-bio {
+  color: var(--ghps-muted) !important;
+  font-size: 1rem !important;
+}
+
+/* Navigation tabs */
+.gh-profile-styler-applied .UnderlineNav {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+}
+.gh-profile-styler-applied .UnderlineNav a {
+  color: var(--ghps-muted) !important;
+  transition: color 150ms ease, transform 150ms ease !important;
+}
+.gh-profile-styler-applied .UnderlineNav a.selected {
+  color: var(--ghps-text) !important;
+  font-weight: 700 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Pinned items (top of profile) */
+.gh-profile-styler-applied .pinned-items-list {
   display: grid !important;
-  grid-template-columns: 1fr auto !important;
-  gap: 12px !important;
-  align-items: start !important;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+  gap: 14px !important;
+}
+.gh-profile-styler-applied .pinned-item-list-item,
+.gh-profile-styler-applied .pinned-item-list-item .pinned-item-content {
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
-  border: 1px solid rgba(255,255,255,0.04) !important;
-  padding: 16px !important;
-  margin-bottom: 14px !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  padding: 14px !important;
   border-radius: 12px !important;
-  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background 220ms ease !important;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.5) !important;
-  cursor: pointer !important;
-  overflow: hidden !important;
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease !important;
+}
+.gh-profile-styler-applied .pinned-item-list-item:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.6) !important;
+}
+.gh-profile-styler-applied .pinned-item-list-item .repo { color: var(--ghps-text) !important; font-weight: 700 !important; }
+.gh-profile-styler-applied .pinned-item-list-item .repo-description { color: var(--ghps-muted) !important; }
+
+/* Repo list (Repositories tab) */
+.gh-profile-styler-applied .js-repo-list, .gh-profile-styler-applied .repo-list {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 16px !important;
+}
+.gh-profile-styler-applied .repo-list-item,
+.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom {
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+  padding: 14px !important;
+  border-radius: 12px !important;
+  transition: transform 220ms ease, box-shadow 220ms ease !important;
+}
+.gh-profile-styler-applied .repo-list-item:hover,
+.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.6) !important;
 }
 
-.gh-profile-styler-applied .repo-card .repo-meta {
-  display: flex !important;
-  gap: 10px !important;
-  align-items: center !important;
-  color: var(--ghps-muted) !important;
-  font-size: 0.95rem !important;
+/* Repository card content */
+.gh-profile-styler-applied .repo-list-item h3,
+.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom h3 { color: var(--ghps-text) !important; margin: 0 0 6px 0 !important; }
+.gh-profile-styler-applied .repo-list-item p,
+.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom p { color: var(--ghps-muted) !important; margin: 0 !important; }
+
+/* Repo metadata row */
+.gh-profile-styler-applied .repo-list-item .repo-meta,
+.gh-profile-styler-applied .col-12.d-block.width-full.py-4.border-bottom .repo-meta {
+  display: flex !important; gap: 10px !important; align-items: center !important; color: var(--ghps-muted) !important;
 }
 
-.gh-profile-styler-applied .repo-card h3 {
-  margin: 0 !important;
-  color: var(--ghps-text) !important;
-  font-weight: 700 !important;
-  font-size: 1.08rem !important;
+/* Contributions calendar (make it readable in dark) */
+.gh-profile-styler-applied .js-yearly-contributions, .gh-profile-styler-applied .ContributionCalendar {
+  background: transparent !important; padding: 12px !important; border-radius: 12px !important;
 }
+.gh-profile-styler-applied .ContributionCalendar-day { stroke: none !important; transition: transform 140ms ease, box-shadow 140ms ease !important; }
+.gh-profile-styler-applied .ContributionCalendar-day:hover { transform: translateY(-3px) !important; box-shadow: 0 6px 14px rgba(0,0,0,0.6) !important; }
+/* Dark color ramp for contributions */
+.gh-profile-styler-applied .ContributionCalendar-day[fill="#ebedf0"] { fill: rgba(255,255,255,0.03) !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[fill="#9be9a8"] { fill: rgba(88,166,255,0.12) !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[fill="#40c463"] { fill: rgba(88,166,255,0.18) !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[fill="#30a14e"] { fill: rgba(88,166,255,0.24) !important; }
+.gh-profile-styler-applied .ContributionCalendar-day[fill="#216e39"] { fill: rgba(88,166,255,0.32) !important; }
 
-.gh-profile-styler-applied .repo-card p {
-  margin: 6px 0 0 0 !important;
-  color: var(--ghps-muted) !important;
-}
+/* Followers / following lists */
+.gh-profile-styler-applied .follow-list-item, .gh-profile-styler-applied .d-table.table-fixed { background: none !important; }
+.gh-profile-styler-applied .follow-list-item .d-table-cell { color: var(--ghps-text) !important; }
 
-.gh-profile-styler-applied .repo-card .repo-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  align-items: flex-end !important;
-}
-
-/* Hover and focus micro-interactions */
-.gh-profile-styler-applied .repo-card:hover,
-.gh-profile-styler-applied .repo-card.ghps-reveal:hover {
-  transform: translateY(-6px) scale(1.006) !important;
-  box-shadow: 0 14px 30px rgba(2,6,23,0.6) !important;
-  background: linear-gradient(180deg, rgba(88,166,255,0.03), rgba(255,255,255,0.02)) !important;
-}
-
-.gh-profile-styler-applied .repo-card .lang-pill {
-  background: rgba(88,166,255,0.12) !important;
-  color: var(--ghps-accent) !important;
-  padding: 4px 8px !important;
-  border-radius: 999px !important;
-  font-size: 0.85rem !important;
-}
-
-/* Reveal animation when card enters viewport */
-.gh-profile-styler-applied .repo-card {
-  opacity: 0 !important;
-  transform: translateY(8px) !important;
-}
-.gh-profile-styler-applied .repo-card.ghps-visible {
-  animation: ghps-fadeUp 420ms cubic-bezier(.2,.9,.2,1) forwards !important;
-}
-@keyframes ghps-fadeUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Small floating toggle button to enable/disable styling */
-.gh-profile-styler-applied .ghps-toggle {
-  position: fixed !important;
-  right: 18px !important;
-  bottom: 18px !important;
-  z-index: 99999 !important;
-  background: linear-gradient(180deg, var(--ghps-accent), #2a7bd7) !important;
+/* Buttons and links */
+.gh-profile-styler-applied .btn, .gh-profile-styler-applied .btn-primary,
+.gh-profile-styler-applied .EdgeButton, .gh-profile-styler-applied a.btn-link {
+  background: linear-gradient(180deg, var(--ghps-accent), var(--ghps-accent-2)) !important;
   color: #071025 !important;
-  padding: 10px 14px !important;
   border-radius: 999px !important;
+  padding: 6px 10px !important;
   box-shadow: 0 8px 20px var(--ghps-glow) !important;
-  border: none !important;
-  cursor: pointer !important;
-  font-weight: 700 !important;
-  font-family: 'Josefin Sans Custom', sans-serif !important;
-  transform-origin: center !important;
   transition: transform 160ms ease, box-shadow 160ms ease !important;
 }
+.gh-profile-styler-applied a:hover, .gh-profile-styler-applied .btn:hover { transform: translateY(-3px) !important; }
+
+/* Floating toggle */
+.gh-profile-styler-applied .ghps-toggle { position: fixed !important; right: 18px !important; bottom: 18px !important; z-index: 99999 !important; background: linear-gradient(180deg, var(--ghps-accent), #2a7bd7) !important; color: #071025 !important; padding: 10px 14px !important; border-radius: 999px !important; box-shadow: 0 8px 20px var(--ghps-glow) !important; border: none !important; cursor: pointer !important; font-weight: 700 !important; font-family: 'Josefin Sans Custom', sans-serif !important; transform-origin: center !important; transition: transform 160ms ease, box-shadow 160ms ease !important; }
 .gh-profile-styler-applied .ghps-toggle:active { transform: scale(0.96) !important; }
 
-/* When styling is disabled via toggle, dim applied elements */
-html.gh-profile-styler-applied.ghps-disabled .gh-profile-styler-applied * {
-  filter: none !important;
-  opacity: 0.9 !important;
-}
+/* Reveal animation for cards (used via .ghps-visible added from content script) */
+.gh-profile-styler-applied .ghps-visible { animation: ghps-fadeUp 420ms cubic-bezier(.2,.9,.2,1) forwards !important; }
+@keyframes ghps-fadeUp { to { opacity: 1; transform: translateY(0) !important; } }
 
-/* Micro-hover on action buttons (stars, forks) */
-.gh-profile-styler-applied .btn,
-.gh-profile-styler-applied a.btn-link {
-  transition: transform 140ms ease, box-shadow 140ms ease !important;
-}
-.gh-profile-styler-applied .btn:hover,
-.gh-profile-styler-applied a.btn-link:hover { transform: translateY(-3px) !important; }
+/* Small UI micro-interactions */
+.gh-profile-styler-applied a, .gh-profile-styler-applied a:link, .gh-profile-styler-applied a:visited { color: var(--ghps-accent) !important; }
+.gh-profile-styler-applied a:hover { text-decoration: underline !important; }
+.gh-profile-styler-applied input, .gh-profile-styler-applied textarea, .gh-profile-styler-applied select { background: #0a0d10 !important; color: var(--ghps-text) !important; border: 1px solid rgba(255,255,255,0.03) !important; }
+
+/* Accessibility: focus outlines */
+.gh-profile-styler-applied :focus { outline: 3px solid rgba(88,166,255,0.14) !important; outline-offset: 3px !important; }
+
+/* Disabled styling mode */
+html.gh-profile-styler-applied.ghps-disabled * { transition: none !important; filter: none !important; opacity: 0.95 !important; }
+
+/* Final safety: ensure text remains readable */
+.gh-profile-styler-applied * { color: inherit !important; }
+
