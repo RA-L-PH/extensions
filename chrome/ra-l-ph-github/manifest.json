@@ -2,14 +2,20 @@
   "manifest_version": 3,
   "name": "GitHub Profile Styler",
   "version": "1.0",
-  "description": "Customize the appearance of your GitHub profile page.",
+  "description": "Customize the appearance of a specific GitHub profile page (RA-L-PH).",
   "permissions": ["activeTab"],
-  "host_permissions": ["https://github.com/RA-L-PH/*"],
+  "host_permissions": ["*://github.com/*"],
   "content_scripts": [
     {
-      "matches": ["https://github.com/RA-L-PH/*"],
+      "matches": [
+        "*://github.com/RA-L-PH",
+        "*://github.com/RA-L-PH/*",
+        "https://github.com/RA-L-PH",
+        "https://github.com/RA-L-PH/*"
+      ],
       "js": ["content.js"],
-      "css": ["styles.css"]
+      "css": ["styles.css"],
+      "run_at": "document_idle"
     }
   ]
 }
