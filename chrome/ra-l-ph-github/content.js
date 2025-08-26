@@ -1,135 +1,124 @@
 /**
- * @file Content script for the RA-L-PH GitHub Profile Styler extension.
- * This script waits for the profile page to load, then restructures the DOM
- * to create a two-column layout as defined in the user's sketch.
- * It uses a MutationObserver to ensure the layout persists through GitHub's
- * client-side navigation.
- */
+ * @file Content script for the RA-L-PH GitHub Profile Styler extension.
+ * This script uses a state-based approach with a MutationObserver to restructure
+ * the DOM into a two-column layout and move user info into the sidebar.
+ * This method is robust against GitHub's dynamic page loading.
+ */
 
 const TARGET_USERNAME = 'RA-L-PH';
 
 /**
- * Checks if the current page is the target GitHub profile page.
- * @returns {boolean} True if the URL matches the target profile.
- */
+ * Checks if the current page is the target GitHub profile page.
+ * @returns {boolean} True if the URL matches the target profile.
+ */
 function isTargetProfilePage() {
-    // Ensure we are on github.com and the path starts with the target username.
-    return window.location.hostname === 'github.com' &&
-        window.location.pathname.toLowerCase().startsWith(`/${TARGET_USERNAME.toLowerCase()}`);
+    return window.location.hostname === 'github.com' &&
+        window.location.pathname.toLowerCase().startsWith(`/${TARGET_USERNAME.toLowerCase()}`);
 }
 
 /**
- * The main function to create and inject the two-column layout.
- * It finds the necessary elements on the original page (avatar, nav, main content),
- * creates the new sidebar and content areas, and moves the original elements into them.
- */
-function applyCustomLayout() {
-    // 1. Pre-flight checks: Only run on the target profile.
-    // *** EDIT: The primary guard is now to check if our layout already exists. This prevents duplication. ***
-    if (document.querySelector('.ghps-custom-root') || !isTargetProfilePage()) {
-        return;
-    }
+ * Creates and injects the full custom layout. This function finds all necessary
+ * original elements, clones them into the new layout, and then replaces the
+ * original page content. It's designed to run only when the custom layout is absent.
+ */
+function buildAndInjectLayout() {
+    // 1. Pre-flight checks:
+    if (document.querySelector('.ghps-custom-root') || !isTargetProfilePage()) {
+        return;
+    }
 
-    console.log('RA-L-PH Styler: Applying custom layout...');
+    // 2. Find all essential source elements from the original GitHub page.
+    const mainContentContainer = document.querySelector('.Layout-main') || document.querySelector('main');
+    const avatarImg = document.querySelector('img.avatar-user, .avatar.avatar-user');
+    const navContainer = document.querySelector('.UnderlineNav');
+    const nameAndUsername = document.querySelector('.vcard-names-container');
+    const bio = document.querySelector('.user-profile-bio');
+    const followerInfo = document.querySelector('div.mb-3 > a[href*="followers"]')?.parentElement;
+    const otherDetails = document.querySelector('.vcard-details');
 
-    // 2. Find the essential source elements from the original GitHub page.
-    const mainContentContainer = document.querySelector('.Layout-main') || document.querySelector('main');
-    const avatarImg = document.querySelector('img.avatar-user, .avatar.avatar-user');
-    const navContainer = document.querySelector('.UnderlineNav');
+    // If any of these core elements aren't found, the page isn't fully loaded.
+    if (!mainContentContainer || !avatarImg || !navContainer || !nameAndUsername) {
+        return;
+    }
 
-    // If any of these core elements aren't found, we can't build the layout.
-    if (!mainContentContainer || !avatarImg || !navContainer) {
-        console.log('RA-L-PH Styler: Could not find essential elements to build layout. Aborting.');
-        return;
-    }
+    console.log('RA-L-PH Styler: Building and injecting custom layout...');
 
-    // Explicitly hide the original navigation container to prevent it from flashing.
-    navContainer.style.display = 'none';
+    // 3. Create the new DOM structure.
+    const customRoot = document.createElement('div');
+    customRoot.className = 'ghps-custom-root';
 
-    // 3. Create the new DOM structure for our custom layout.
-    const customRoot = document.createElement('div');
-    customRoot.className = 'ghps-custom-root';
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'ghps-sidebar';
 
-    const sidebar = document.createElement('aside');
-    sidebar.className = 'ghps-sidebar';
+    const rightContent = document.createElement('div');
+    rightContent.className = 'ghps-custom-right';
 
-    const rightContent = document.createElement('div');
-    rightContent.className = 'ghps-custom-right';
+    // 4. Populate the sidebar with cloned elements.
+    // -- Avatar --
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = 'ghps-avatar-wrap';
+    avatarWrap.appendChild(avatarImg.cloneNode(true));
+    sidebar.appendChild(avatarWrap);
 
-    // 4. Populate the sidebar.
-    const avatarWrap = document.createElement('div');
-    avatarWrap.className = 'ghps-avatar-wrap';
-    const avatarClone = avatarImg.cloneNode(true);
-    avatarClone.classList.add('ghps-avatar');
-    avatarWrap.appendChild(avatarClone);
-    sidebar.appendChild(avatarWrap);
+    // -- User Info Container --
+    const userInfoContainer = document.createElement('div');
+    userInfoContainer.className = 'ghps-user-info';
+    userInfoContainer.appendChild(nameAndUsername.cloneNode(true));
+    if (bio) userInfoContainer.appendChild(bio.cloneNode(true));
+    if (followerInfo) userInfoContainer.appendChild(followerInfo.cloneNode(true));
+    if (otherDetails) userInfoContainer.appendChild(otherDetails.cloneNode(true));
+    sidebar.appendChild(userInfoContainer);
 
-    const navList = document.createElement('ul');
-    navList.className = 'ghps-sidebar-nav';
-    const navLinks = navContainer.querySelectorAll('a');
+    // -- Navigation --
+    const navList = document.createElement('ul');
+    navList.className = 'ghps-sidebar-nav';
 
-    navLinks.forEach(link => {
-        const li = document.createElement('li');
-        const linkClone = link.cloneNode(true);
+    // *** FIX: Select only the links that are NOT menu items to avoid duplication ***
+    const navLinks = navContainer.querySelectorAll('a:not([role="menuitem"])');
 
-        const icon = linkClone.querySelector('svg');
-        if (icon) {
-            icon.remove();
-        }
+    for (let i = 0; i < navLinks.length && i < 5; i++) {
+        const link = navLinks[i];
+        const li = document.createElement('li');
+        const linkClone = link.cloneNode(true);
+        const icon = linkClone.querySelector('svg');
+        if (icon) icon.remove(); // Remove icon as requested
+        linkClone.classList.add('ghps-sidebar-link');
+        li.appendChild(linkClone);
+        navList.appendChild(li);
+    }
+    sidebar.appendChild(navList);
 
-        linkClone.classList.add('ghps-sidebar-link');
-        linkClone.classList.remove('selected', 'UnderlineNav-item');
-        li.appendChild(linkClone);
-        navList.appendChild(li);
-    });
-    sidebar.appendChild(navList);
+    // 5. Assemble and Inject the Layout.
+    rightContent.appendChild(mainContentContainer);
+    customRoot.appendChild(sidebar);
+    customRoot.appendChild(rightContent);
 
+    const pageContainer = document.querySelector('.application-main .container-xl') || document.body;
+    pageContainer.innerHTML = ''; // Clear the original content
+    pageContainer.appendChild(customRoot);
 
-    // 5. Assemble the new layout.
-    rightContent.appendChild(mainContentContainer);
-    customRoot.appendChild(sidebar);
-    customRoot.appendChild(rightContent);
-
-    // 6. Inject the new layout into the page.
-    const pageContainer = document.querySelector('.application-main .container-xl') || document.body;
-    pageContainer.innerHTML = '';
-    pageContainer.appendChild(customRoot);
-
-
-    // 7. Add classes to the <html> element to activate the CSS styles.
-    document.documentElement.classList.add('gh-profile-styler-applied', 'ghps-two-column');
+    // 6. Add classes to the root element to activate styles.
+    document.documentElement.classList.add('gh-profile-styler-applied', 'ghps-two-column');
 }
 
 /**
- * Sets up a MutationObserver to watch for DOM changes.
- * This is crucial for Single Page Applications (SPAs) like GitHub where
- * navigation doesn't trigger a full page reload. The observer will re-apply
- * the layout if it gets removed during a client-side navigation event.
- */
-function observeDOMChanges() {
-    const observer = new MutationObserver(() => {
-        // If our layout root is ever removed from the page (e.g., by SPA navigation),
-        // we simply try to run the layout function again. The function itself
-        // now contains the necessary checks to prevent duplication.
-        run();
-    });
+ * Sets up a MutationObserver to watch for DOM changes. This is the engine
+ * that drives the script, ensuring the layout is applied correctly after
+ * any client-side navigation.
+ */
+function initializeStyler() {
+    const observer = new MutationObserver(() => {
+        requestAnimationFrame(buildAndInjectLayout);
+    });
 
-    // Observe the entire document for changes to the element tree.
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
+
+    // Run an initial attempt
+    requestAnimationFrame(buildAndInjectLayout);
 }
 
-/**
- * Main execution function.
- * Waits for the page to be ready before attempting to apply the layout.
- */
-function run() {
-    // Using requestAnimationFrame ensures we don't block the browser's rendering
-    // and that the DOM is in a stable state before we try to modify it.
-    requestAnimationFrame(applyCustomLayout);
-}
-
-// Initial run when the script is first injected.
-run();
-
-// Set up the observer to handle subsequent page navigations.
-observeDOMChanges();
+// Start the entire process.
+initializeStyler();
