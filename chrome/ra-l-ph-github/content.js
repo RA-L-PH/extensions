@@ -7,7 +7,6 @@
  */
 
 const TARGET_USERNAME = 'RA-L-PH';
-const LAYOUT_APPLIED_CLASS = 'ghps-layout-applied';
 
 /**
  * Checks if the current page is the target GitHub profile page.
@@ -25,15 +24,15 @@ function isTargetProfilePage() {
  * creates the new sidebar and content areas, and moves the original elements into them.
  */
 function applyCustomLayout() {
-    // 1. Pre-flight checks: Only run on the target profile and if the layout isn't already applied.
-    if (!isTargetProfilePage() || document.body.classList.contains(LAYOUT_APPLIED_CLASS)) {
+    // 1. Pre-flight checks: Only run on the target profile.
+    // *** EDIT: The primary guard is now to check if our layout already exists. This prevents duplication. ***
+    if (document.querySelector('.ghps-custom-root') || !isTargetProfilePage()) {
         return;
     }
 
     console.log('RA-L-PH Styler: Applying custom layout...');
 
     // 2. Find the essential source elements from the original GitHub page.
-    // We use multiple selectors for resilience against GitHub UI updates.
     const mainContentContainer = document.querySelector('.Layout-main') || document.querySelector('main');
     const avatarImg = document.querySelector('img.avatar-user, .avatar.avatar-user');
     const navContainer = document.querySelector('.UnderlineNav');
@@ -44,21 +43,20 @@ function applyCustomLayout() {
         return;
     }
 
+    // Explicitly hide the original navigation container to prevent it from flashing.
+    navContainer.style.display = 'none';
+
     // 3. Create the new DOM structure for our custom layout.
-    // This is the main grid container.
     const customRoot = document.createElement('div');
     customRoot.className = 'ghps-custom-root';
 
-    // This is the left sidebar.
     const sidebar = document.createElement('aside');
     sidebar.className = 'ghps-sidebar';
 
-    // This is the right-hand content area.
     const rightContent = document.createElement('div');
     rightContent.className = 'ghps-custom-right';
 
     // 4. Populate the sidebar.
-    // Create and add the avatar.
     const avatarWrap = document.createElement('div');
     avatarWrap.className = 'ghps-avatar-wrap';
     const avatarClone = avatarImg.cloneNode(true);
@@ -66,7 +64,6 @@ function applyCustomLayout() {
     avatarWrap.appendChild(avatarClone);
     sidebar.appendChild(avatarWrap);
 
-    // Create and add the vertical navigation.
     const navList = document.createElement('ul');
     navList.className = 'ghps-sidebar-nav';
     const navLinks = navContainer.querySelectorAll('a');
@@ -74,8 +71,13 @@ function applyCustomLayout() {
     navLinks.forEach(link => {
         const li = document.createElement('li');
         const linkClone = link.cloneNode(true);
+
+        const icon = linkClone.querySelector('svg');
+        if (icon) {
+            icon.remove();
+        }
+
         linkClone.classList.add('ghps-sidebar-link');
-        // Remove GitHub's specific styling classes to avoid conflicts.
         linkClone.classList.remove('selected', 'UnderlineNav-item');
         li.appendChild(linkClone);
         navList.appendChild(li);
@@ -84,24 +86,18 @@ function applyCustomLayout() {
 
 
     // 5. Assemble the new layout.
-    // Move the original main content into our new right-hand container.
     rightContent.appendChild(mainContentContainer);
-
-    // Add the sidebar and the right content area to our root grid container.
     customRoot.appendChild(sidebar);
     customRoot.appendChild(rightContent);
 
     // 6. Inject the new layout into the page.
-    // Find the overall page container to inject our layout into.
     const pageContainer = document.querySelector('.application-main .container-xl') || document.body;
-    // Clear the container and add our new layout.
     pageContainer.innerHTML = '';
     pageContainer.appendChild(customRoot);
 
 
-    // 7. Add classes to the <html> and <body> elements to activate the CSS styles.
-    document.documentElement.classList.add('gh-profile-styler-applied');
-    document.body.classList.add(LAYOUT_APPLIED_CLASS, 'ghps-two-column');
+    // 7. Add classes to the <html> element to activate the CSS styles.
+    document.documentElement.classList.add('gh-profile-styler-applied', 'ghps-two-column');
 }
 
 /**
@@ -111,28 +107,24 @@ function applyCustomLayout() {
  * the layout if it gets removed during a client-side navigation event.
  */
 function observeDOMChanges() {
-    const observer = new MutationObserver((mutationsList, obs) => {
-        // A simple check: if our layout root is no longer in the document, re-run the layout function.
-        if (!document.querySelector('.ghps-custom-root')) {
-            // We disconnect the observer temporarily to avoid infinite loops while we modify the DOM.
-            obs.disconnect();
-            // Re-apply the layout.
-            run();
-            // Reconnect the observer once we're done.
-            obs.observe(document.body, { childList: true, subtree: true });
-        }
+    const observer = new MutationObserver(() => {
+        // If our layout root is ever removed from the page (e.g., by SPA navigation),
+        // we simply try to run the layout function again. The function itself
+        // now contains the necessary checks to prevent duplication.
+        run();
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Observe the entire document for changes to the element tree.
+    observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
 /**
  * Main execution function.
- * Waits for the page to be fully loaded before attempting to apply the layout.
+ * Waits for the page to be ready before attempting to apply the layout.
  */
 function run() {
-    // The `requestAnimationFrame` ensures we wait for the browser to finish its
-    // current painting cycle, which can prevent issues on complex pages like GitHub.
+    // Using requestAnimationFrame ensures we don't block the browser's rendering
+    // and that the DOM is in a stable state before we try to modify it.
     requestAnimationFrame(applyCustomLayout);
 }
 
