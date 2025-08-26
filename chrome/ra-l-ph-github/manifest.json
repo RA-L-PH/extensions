@@ -3,6 +3,11 @@
   "name": "GitHub Profile Styler for RA-L-PH",
   "version": "1.1",
   "description": "Applies a custom two-column layout and dark theme to the RA-L-PH GitHub profile page.",
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
   "permissions": [],
   "host_permissions": [
     "https://github.com/*"
@@ -23,6 +28,14 @@
       "run_at": "document_idle"
     }
   ],
+  "action": {
+    "default_icon": {
+      "16": "logo.png",
+      "48": "logo.png",
+      "128": "logo.png"
+    },
+    "default_title": "GitHub Profile Styler for RA-L-PH"
+  },
   "web_accessible_resources": [
     {
       "resources": [
