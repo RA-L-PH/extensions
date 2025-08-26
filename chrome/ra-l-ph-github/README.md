@@ -3,8 +3,8 @@
 This Chrome extension customizes the look of the GitHub profile for the user `RA-L-PH`.
 
 ## What it does
-- Applies a themed header to the profile name area.
-- Styles the bio and optional repository cards.
+- Reorganizes the RA-L-PH GitHub profile into a persistent two-column layout: a fixed left sidebar (identity + vertical navigation) and a dynamic right content pane.
+- Adds a modern dark theme and custom font for a cleaner profile presentation.
 - Only runs on URLs matching `github.com/RA-L-PH`.
 
 ## Install (Developer mode)
@@ -19,8 +19,13 @@ This Chrome extension customizes the look of the GitHub profile for the user `RA
 - Open DevTools (F12) and check the Console for "Content script" logs. You can also inspect `<html>` to see if the `gh-profile-styler-applied` class was added.
 
 ## Customization
-- Edit `content.js` to change the `TARGET_USERNAME` value.
-- Edit `styles.css` to update colors and spacing.
+- Edit `content.js` to alter the sidebar behavior or default navigation. The script builds a left sidebar and routes clicks to the profile's `?tab=` URLs.
+- Edit `styles.css` to update colors, spacing, fonts, and responsive behavior. The included `fonts/` folder contains Josefin Sans weights used by default.
+
+Files added:
+- `content.js` — content script that re-structures the page into a left sidebar and right content pane.
+- `styles.css` — CSS implementing the two-column layout and theme.
+
 
 ## Notes
 - This extension is intentionally minimal and uses only content scripts and host permissions.

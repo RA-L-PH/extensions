@@ -11,7 +11,8 @@
     {
       "matches": [
         "https://github.com/RA-L-PH",
-        "https://github.com/RA-L-PH/*"
+        "https://github.com/RA-L-PH/*",
+        "https://github.com/RA-L-PH?tab=*"
       ],
       "js": [
         "content.js"

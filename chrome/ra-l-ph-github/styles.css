@@ -3,6 +3,23 @@
  * This file implements a dark theme and the two-column layout from the sketch.
  */
 
+/* Use Google-hosted Protest Revolution (fallback to system fonts if Google blocked) */
+@import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap');
+
+/* Stronger, targeted font-family application: prefer Google Protest Revolution, then system */
+/* Prefer the bundled Protest Revolution font when registered at runtime */
+html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
+  font-family: 'ProtestRevolutionLocal', 'Protest Revolution', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+}
+.ghps-user-info .p-name,
+.ghps-user-info .p-name,
+.ghps-user-info .vcard-fullname,
+.ghps-profile-card .vcard-names-container,
+.ghps-nav-card .ghps-sidebar-link {
+  font-family: 'ProtestRevolutionLocal', 'Protest Revolution', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+}
+
+
 /* Root variables that define the color scheme for the dark theme */
 html.gh-profile-styler-applied {
   --ghps-bg: #0d1117;
@@ -11,8 +28,8 @@ html.gh-profile-styler-applied {
   --ghps-border: #30363d;
   --ghps-muted: #8b949e;
   --ghps-text: #c9d1d9;
-  --ghps-accent: #58a6ff;
-  --ghps-accent-2: #1f6feb;
+  --ghps-accent: #ffae58;
+  --ghps-accent-2: #eb931f;
   --ghps-glow: rgba(88, 166, 255, 0.15);
   --ghps-radius: 12px;
   color-scheme: dark;
@@ -23,7 +40,30 @@ html.gh-profile-styler-applied,
 html.gh-profile-styler-applied body {
   background-color: var(--ghps-bg) !important;
   color: var(--ghps-text) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Remove extra gap under GitHub's top header when our layout is active */
+html.gh-profile-styler-applied .application-main,
+html.gh-profile-styler-applied .application-main .container-xl,
+html.gh-profile-styler-applied header.Header,
+html.gh-profile-styler-applied .site-header,
+html.gh-profile-styler-applied .Layout-header {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* In case GitHub inserts a spacer element before content, hide minimal top spacers */
+html.gh-profile-styler-applied .application-main > :first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Hide original nav/spacer elements that we marked after cloning */
+.ghps-original-hidden {
+  display: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
 }
 
 /*
@@ -47,12 +87,15 @@ html.gh-profile-styler-applied body {
 
 /* The left sidebar container */
 .ghps-sidebar {
-  background-color: var(--ghps-surface);
-  border: 1px solid var(--ghps-border);
-  padding: 24px;
-  border-radius: var(--ghps-radius);
-  position: sticky;
+  /* Make the outer wrapper visually neutral so only the two inner cards are visible */
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  position: sticky; /* keep the left column anchored while scrolling */
   top: 24px;
+  align-self: start;
+  z-index: 5;
 }
 
 /* Wrapper for the circular avatar */
@@ -65,11 +108,22 @@ html.gh-profile-styler-applied body {
 }
 
 .ghps-avatar-wrap img {
-  width: 180px !important;
-  height: 180px !important;
+  width: 160px !important;
+  height: 160px !important;
   border-radius: 50% !important;
   border: 2px solid var(--ghps-border);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Profile card: rounded container holding avatar + info */
+.ghps-profile-card {
+  background: var(--ghps-surface) !important;
+  border: 1px solid var(--ghps-border) !important;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 0 0 16px 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /*
@@ -78,41 +132,68 @@ html.gh-profile-styler-applied body {
  * ===================================================================
  */
 .ghps-user-info {
-  text-align: center;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--ghps-border);
+  text-align: left;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: none;
 }
 
 .ghps-user-info .vcard-names-container {
-  margin-bottom: 12px;
+  /* Two-column row: name on the left, pronouns/secondary on the right */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  width: 100%;
 }
 
 .ghps-user-info .p-name {
   font-size: 1.5rem;
   font-weight: 600;
   line-height: 1.2;
+  font-family: 'ProtestRevolutionLocal', 'Protest Revolution', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ghps-user-info .p-nickname {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--ghps-muted);
-  display: block;
-  margin-top: 4px;
+  display: inline-block;
+  margin: 0;
+  padding-left: 8px;
+  flex-shrink: 0;
 }
 
 .ghps-user-info .user-profile-bio {
   font-size: 0.95rem;
-  margin: 16px 0;
+  margin: 8px 0 12px 0;
   color: var(--ghps-muted);
 }
 
 /* Style for the follower/following container */
 .ghps-user-info div.mb-3 {
+  /* Followers / Following on a single row, spaced apart */
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 1rem !important;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 0.75rem !important;
+}
+
+/* Ensure children align left and right */
+.ghps-user-info div.mb-3 > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.ghps-user-info div.mb-3 > *:first-child {
+  text-align: left;
+}
+.ghps-user-info div.mb-3 > *:last-child {
+  text-align: right;
 }
 
 .ghps-user-info .vcard-details {
@@ -121,6 +202,73 @@ html.gh-profile-styler-applied body {
   margin-top: 16px;
   font-size: 0.9rem;
   color: var(--ghps-muted);
+}
+
+/* Nav card: rounded list matching the sketch with Protest Revolution font and extra spacing */
+.ghps-nav-card {
+  background: var(--ghps-surface) !important;
+  border: 1px solid var(--ghps-border) !important;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 12px 0 0 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ghps-nav-card .ghps-sidebar-nav {
+  display: block !important;
+  gap: 12px !important;
+}
+
+.ghps-nav-card .ghps-sidebar-link {
+  display: block !important;
+  padding: 10px 18px 10px 20px !important; /* make room for left accent */
+  font-family: 'ProtestRevolutionLocal', 'Protest Revolution', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+  font-size: 1.4rem !important;
+  color: var(--ghps-text) !important;
+  text-align: left !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Selected / active nav link highlight */
+.ghps-nav-card .ghps-sidebar-link[aria-current="page"],
+.ghps-nav-card .ghps-sidebar-link.selected,
+.ghps-nav-card .ghps-sidebar-link.active,
+.ghps-nav-card .ghps-sidebar-link[aria-selected="true"] {
+  color: var(--ghps-accent-2) !important;
+  background: linear-gradient(90deg, rgba(88,166,255,0.04), rgba(88,166,255,0.02)) !important;
+  font-weight: 700 !important;
+  position: relative !important;
+  box-shadow: none !important;
+}
+
+/* Left accent bar for the selected item (visually distinct) */
+.ghps-nav-card .ghps-sidebar-link[aria-current="page"]::before,
+.ghps-nav-card .ghps-sidebar-link.selected::before,
+.ghps-nav-card .ghps-sidebar-link.active::before,
+.ghps-nav-card .ghps-sidebar-link[aria-selected="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 6px;
+  background: var(--ghps-accent-2);
+  border-radius: 4px;
+}
+
+.ghps-nav-card .ghps-sidebar-link {
+  transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
+}
+
+/* Remove any decorative dividers/lines that may be carried in from cloned nav markup */
+.ghps-nav-card,
+.ghps-nav-card * {
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
 }
 
 /* *** EDIT: Forcefully hide any unwanted elements that might get cloned *** */
@@ -139,22 +287,62 @@ html.gh-profile-styler-applied body {
   margin: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 8px !important;
+  gap: 14px !important;
+  margin-top: 8px !important;
 }
 
 .ghps-sidebar-link {
-  display: block !important;
-  padding: 10px 16px !important;
-  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
   color: var(--ghps-text) !important;
   text-decoration: none !important;
-  font-weight: 500 !important;
-  transition: background-color 150ms ease-in-out, color 150ms ease-in-out;
+  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  transition: background-color 150ms ease-in-out, color 150ms ease-in-out, transform 120ms ease;
+}
+.ghps-sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  color: var(--ghps-text) !important;
+  text-decoration: none !important;
+  font-size: 1.15rem !important;
+  transition: background-color 150ms ease-in-out, color 150ms ease-in-out, transform 120ms ease !important;
 }
 
 .ghps-sidebar-link:hover {
-  background: rgba(139, 148, 158, 0.1) !important;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
   color: var(--ghps-accent) !important;
+  transform: translateX(4px) !important;
+}
+
+/* Force horizontal text and remove accidental transforms inside the sidebar.
+   This fixes vertical/stacked characters (writing-mode/rotate) shown in screenshot. */
+.ghps-sidebar,
+.ghps-sidebar * {
+  writing-mode: horizontal-tb !important;
+  transform: none !important;
+  text-orientation: mixed !important;
+  white-space: normal !important;
+}
+
+/* Badge / counter that appears next to some nav links (e.g., Repositories, Stars) */
+.ghps-sidebar-link .Counter,
+.ghps-sidebar-link .counter,
+.ghps-sidebar-link .d-inline-block {
+  margin-left: auto !important;
+  background-color: var(--ghps-surface-2) !important;
+  color: var(--ghps-muted) !important;
+  padding: 2px 8px !important;
+  border-radius: 999px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255,255,255,0.02) !important;
 }
 
 /* The right-hand container for the main GitHub content */
@@ -177,6 +365,12 @@ html.ghps-two-column .UnderlineNav-body {
   display: none !important;
 }
 
+/* Hide original main content boards (keep our cloned copy visible) */
+html.gh-profile-styler-applied .Layout-main:not(.ghps-clone),
+html.gh-profile-styler-applied .application-main > .container-xl > .Layout-main:not(.ghps-clone) {
+  display: none !important;
+}
+
 /*
  * ===================================================================
  * Responsive Design
@@ -196,5 +390,17 @@ html.ghps-two-column .UnderlineNav-body {
   .ghps-avatar-wrap img {
       width: 120px !important;
       height: 120px !important;
+  }
+  /* On small screens, center the user info and stack name/pronouns */
+  .ghps-user-info {
+    text-align: center;
+  }
+  .ghps-user-info .vcard-names-container {
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+  .ghps-user-info div.mb-3 {
+    justify-content: center;
   }
 }
