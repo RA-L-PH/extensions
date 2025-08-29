@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Font || kais",
+    "version": "1.1",
+    "description": "Change font",
+    "host_permissions": [
+        "https://x.com/*",
+        "http://x.com/*"
+    ],
+    "content_scripts": [
+
+        {
+            "matches": [ "https://x.com/*", 
+        "http://x.com/*"],
+            "js": ["web.js"],
+                "run_at": "document_idle",
+    "all_frames": false
+        }
+    ],
+"web_accessible_resources": [
+    {
+        "resources": ["fonts/*"],
+        "matches": ["<all_urls>"]
+    }
+]
+}

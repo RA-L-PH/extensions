@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced Font Changer</title>
+  <style>
+    body {
+      width: 400px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .category {
+      margin-bottom: 20px;
+    }
+    .category h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .font-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .font-option {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background: #f9f9f9;
+      transition: background 0.2s;
+    }
+    .font-option:hover {
+      background: #e0e0e0;
+    }
+    .font-option.selected {
+      background: #007acc;
+      color: white;
+      border-color: #007acc;
+    }
+    .apply-btn {
+  padding: 10px;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    .apply-btn:hover {
+      background: #005aa3;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+    }
+    .header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 16px;
+    }
+    .current-font {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border: 2px solid #ddd;
+    }
+    .font-preview {
+      margin-top: 10px;
+      padding: 20px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 18px;
+      line-height: 1.6;
+      background: white;
+      min-height: 80px;
+      text-align: center;
+    }
+    .settings {
+      margin: 15px 0;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    .checkbox-label input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
+    .setting-description {
+      font-size: 12px;
+      color: #666;
+      margin-left: 20px;
+      line-height: 1.4;
+    }
+    .footer {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding-top: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.95));
+      margin-top: 12px;
+      padding-bottom: 6px;
+    }
+    .footer button {
+      flex: 1 1 0;
+      padding: 10px 12px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+    .reset-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .reset-btn:hover {
+      background: #c0392b;
+    }
+    .footer .apply-btn {
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="afc.png" alt="Advanced Font Changer">
+    <h2>Advanced Font Changer</h2>
+  </div>
+
+  <div class="current-font">
+    <strong>Current Font:</strong> <span id="currentFont">Loading...</span>
+    <div id="fontPreview" class="font-preview">
+      The quick brown fox jumps over the lazy dog. 1234567890
+    </div>
+  </div>
+
+  <div class="settings">
+    <label class="checkbox-label">
+      <input type="checkbox" id="includeIcons">
+      <span class="checkmark"></span>
+      Include Icons & Symbols
+    </label>
+    <div class="setting-description">
+      Apply font to icon fonts (Font Awesome, Material Icons, etc.)
+    </div>
+  </div>
+
+  <div class="category">
+    <h3>Sans-Serif Fonts</h3>
+    <div class="font-list" id="sansSerifFonts">
+      <div class="font-option" data-font="Open Sans">Open Sans</div>
+      <div class="font-option" data-font="Roboto">Roboto</div>
+      <div class="font-option" data-font="Lato">Lato</div>
+      <div class="font-option" data-font="Montserrat">Montserrat</div>
+      <div class="font-option" data-font="Poppins">Poppins</div>
+      <div class="font-option" data-font="Inter">Inter</div>
+      <div class="font-option" data-font="Nunito Sans">Nunito Sans</div>
+      <div class="font-option" data-font="Source Sans 3">Source Sans 3</div>
+      <div class="font-option" data-font="Work Sans">Work Sans</div>
+      <div class="font-option" data-font="Manrope">Manrope</div>
+      <div class="font-option" data-font="Fira Sans">Fira Sans</div>
+      <div class="font-option" data-font="IBM Plex Sans">IBM Plex Sans</div>
+      <div class="font-option" data-font="Ubuntu">Ubuntu</div>
+      <div class="font-option" data-font="DM Sans">DM Sans</div>
+      <div class="font-option" data-font="Karla">Karla</div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h3>Serif Fonts</h3>
+    <div class="font-list" id="serifFonts">
+      <div class="font-option" data-font="Merriweather">Merriweather</div>
+      <div class="font-option" data-font="Libre Baskerville">Libre Baskerville</div>
+      <div class="font-option" data-font="Lora">Lora</div>
+      <div class="font-option" data-font="PT Serif">PT Serif</div>
+      <div class="font-option" data-font="Noto Serif">Noto Serif</div>
+      <div class="font-option" data-font="Cormorant Garamond">Cormorant Garamond</div>
+      <div class="font-option" data-font="Alegreya">Alegreya</div>
+      <div class="font-option" data-font="Arvo">Arvo</div>
+      <div class="font-option" data-font="Bitter">Bitter</div>
+      <div class="font-option" data-font="Crimson Text">Crimson Text</div>
+      <div class="font-option" data-font="Playfair Display">Playfair Display</div>
+      <div class="font-option" data-font="Roboto Slab">Roboto Slab</div>
+      <div class="font-option" data-font="Zilla Slab">Zilla Slab</div>
+      <div class="font-option" data-font="Slabo 27px">Slabo 27px</div>
+      <div class="font-option" data-font="EB Garamond">EB Garamond</div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h3>Monospace & Display Fonts</h3>
+    <div class="font-list" id="monospaceFonts">
+      <div class="font-option" data-font="Comfortaa">Comfortaa</div>
+      <div class="font-option" data-font="Roboto Mono">Roboto Mono</div>
+      <div class="font-option" data-font="Space Mono">Space Mono</div>
+      <div class="font-option" data-font="Source Code Pro">Source Code Pro</div>
+      <div class="font-option" data-font="Courier Prime">Courier Prime</div>
+      <div class="font-option" data-font="Inconsolata">Inconsolata</div>
+      <div class="font-option" data-font="JetBrains Mono">JetBrains Mono</div>
+      <div class="font-option" data-font="Fira Code">Fira Code</div>
+      <div class="font-option" data-font="Lekton">Lekton</div>
+      <div class="font-option" data-font="Cousine">Cousine</div>
+      <div class="font-option" data-font="Anonymous Pro">Anonymous Pro</div>
+      <div class="font-option" data-font="Syne Mono">Syne Mono</div>
+      <div class="font-option" data-font="VT323">VT323</div>
+      <div class="font-option" data-font="Share Tech Mono">Share Tech Mono</div>
+      <div class="font-option" data-font="Special Elite">Special Elite</div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h3>Dyslexia-Friendly & Accessible Fonts</h3>
+    <div class="font-list" id="dyslexiaFonts">
+      <div class="font-option" data-font="Lexend">Lexend</div>
+      <div class="font-option" data-font="Atkinson Hyperlegible">Atkinson Hyperlegible</div>
+      <div class="font-option" data-font="OpenDyslexic">OpenDyslexic</div>
+      <div class="font-option" data-font="Sora">Sora</div>
+      <div class="font-option" data-font="Proza Libre">Proza Libre</div>
+      <div class="font-option" data-font="Quattrocento Sans">Quattrocento Sans</div>
+      <div class="font-option" data-font="Nunito">Nunito</div>
+      <div class="font-option" data-font="Comic Sans MS">Comic Sans</div>
+      <div class="font-option" data-font="Hind">Hind</div>
+      <div class="font-option" data-font="Merriweather Sans">Merriweather Sans</div>
+      <div class="font-option" data-font="Inter">Inter</div>
+      <div class="font-option" data-font="Noto Sans">Noto Sans</div>
+      <div class="font-option" data-font="IBM Plex Sans">IBM Plex Sans</div>
+      <div class="font-option" data-font="Arial">Arial</div>
+      <div class="font-option" data-font="Verdana">Verdana</div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h3>Funky Fonts</h3>
+    <div class="font-list" id="funkyFonts">
+      <div class="font-option" data-font="Permanent Marker">Permanent Marker</div>
+      <div class="font-option" data-font="Bungee">Bungee</div>
+      <div class="font-option" data-font="Lobster">Lobster</div>
+      <div class="font-option" data-font="Pacifico">Pacifico</div>
+      <div class="font-option" data-font="Luckiest Guy">Luckiest Guy</div>
+      <div class="font-option" data-font="Fredericka the Great">Fredericka the Great</div>
+      <div class="font-option" data-font="Press Start 2P">Press Start 2P</div>
+      <div class="font-option" data-font="Monoton">Monoton</div>
+      <div class="font-option" data-font="Black Ops One">Black Ops One</div>
+      <div class="font-option" data-font="Alfa Slab One">Alfa Slab One</div>
+      <div class="font-option" data-font="Coda">Coda</div>
+      <div class="font-option" data-font="Gochi Hand">Gochi Hand</div>
+      <div class="font-option" data-font="Rubik Beastly">Rubik Beastly</div>
+      <div class="font-option" data-font="Amatic SC">Amatic SC</div>
+      <div class="font-option" data-font="Titan One">Titan One</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="reset-btn" id="resetBtn" title="Remove injected fonts/styles from all open pages">Reset All Pages</button>
+    <button class="apply-btn" id="applyBtn">Apply Font</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

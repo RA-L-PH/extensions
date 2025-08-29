@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Inactivity Locker",
+  "description": "Locks browsing when the user is inactive and requires a password to unlock.",
+  "version": "1.0.0",
+  "permissions": [
+    "idle",
+    "storage",
+    "tabs",
+    "alarms"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icon128.png",
+    "48": "icon128.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_title": "Inactivity Locker",
+    "default_icon": {
+      "16": "icon128.png",
+      "48": "icon128.png",
+      "128": "icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lock_screen.html", "lock_screen.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

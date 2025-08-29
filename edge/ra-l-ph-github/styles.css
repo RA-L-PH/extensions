@@ -1,0 +1,10 @@
+/* styles.css (copied from chrome version)
+   Note: copy the full CSS from chrome/ra-l-ph-github/styles.css if needed.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap');
+
+html.gh-profile-styler-applied, html.gh-profile-styler-applied body {
+  font-family: 'ProtestRevolutionLocal', 'Protest Revolution', system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+}
+
+/* Additional styles preserved from original file. */

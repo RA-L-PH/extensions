@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Inactivity Locker Options</title>
+    <style>
+      body{font-family:Arial;margin:20px}
+      .hidden{display:none}
+      label{display:block;margin-top:8px}
+    </style>
+  </head>
+  <body>
+    <div id="auth">
+      <h2>Enter Admin Password</h2>
+      <input id="adminpw" type="password" placeholder="Admin password" />
+      <button id="go">Enter</button>
+      <div id="authmsg" style="color:#c00"></div>
+    </div>
+
+    <div id="ui" class="hidden">
+      <h2>Settings</h2>
+      <label>Idle minutes
+        <input id="idle" type="number" min="1" />
+      </label>
+      <label>Set password
+        <input id="pass" type="password" />
+      </label>
+      <button id="save">Save</button>
+      <div id="savemsg"></div>
+    </div>
+
+    <script>
+      const auth = document.getElementById('auth');
+      const ui = document.getElementById('ui');
+      const adminpw = document.getElementById('adminpw');
+      const go = document.getElementById('go');
+      const authmsg = document.getElementById('authmsg');
+      const idle = document.getElementById('idle');
+      const pass = document.getElementById('pass');
+      const save = document.getElementById('save');
+      const savemsg = document.getElementById('savemsg');
+
+      function showUI() { auth.classList.add('hidden'); ui.classList.remove('hidden'); }
+
+      chrome.storage.local.get(['password','idleMinutes'], (items) => {
+        idle.value = items.idleMinutes || 5;
+        // don't prefill password for security
+      });
+
+      go.addEventListener('click', () => {
+        const val = adminpw.value || '';
+        chrome.storage.local.get(['password'], (items) => {
+          const pw = items.password || '1234';
+          if (val === pw) {
+            showUI();
+          } else {
+            authmsg.textContent = 'Incorrect admin password';
+            adminpw.value = '';
+          }
+        });
+      });
+
+      save.addEventListener('click', () => {
+        const n = parseInt(idle.value, 10) || 5;
+        const p = pass.value;
+        const obj = { idleMinutes: n };
+        if (p && p.length > 0) obj.password = p;
+        chrome.storage.local.set(obj, () => {
+          savemsg.textContent = 'Saved';
+          pass.value = '';
+        });
+      });
+    </script>
+  </body>
+</html>
